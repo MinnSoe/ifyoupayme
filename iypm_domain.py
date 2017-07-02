@@ -40,13 +40,13 @@ t.add_output([
         'ZoneId',
         Description='Route53 Zone ID',
         Value=Ref(hosted_zone),
-        Export=Export(Sub('${AWS::StackName}-${ZoneName}-R53Zone'))
+        Export=Export(Sub('${AWS::StackName}-R53Zone'))
     ),
     Output(
         'CertificateId',
         Description='ACM Certificate ARN',
         Value=Ref(acm_certificate),
-        Export=Export(Sub('${AWS::StackName}-${ZoneName}-CertARN'))
+        Export=Export(Sub('${AWS::StackName}-CertARN'))
     )
 ])
 
