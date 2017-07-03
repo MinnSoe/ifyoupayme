@@ -15,7 +15,7 @@
     },
     "Parameters": {
         "DomainName": {
-            "Description": "The name of the domain to create certificates for (example.com).",
+            "Description": "The domain name to create certificates for (example.com).",
             "Type": "String"
         }
     },
