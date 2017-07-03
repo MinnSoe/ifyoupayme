@@ -1,10 +1,9 @@
 import sys
 
 try:
-    from troposphere import Join, Sub, Output, Export
+    from troposphere import Sub, Output, Export
     from troposphere import Parameter, Ref, Template
     from troposphere.route53 import HostedZone
-    from troposphere.certificatemanager import Certificate
 except ImportError:
     sys.exit('Unable to import troposphere. '
              'Try "pip install troposphere[policy]".')
@@ -13,9 +12,7 @@ except ImportError:
 t = Template()
 
 
-t.add_description(
-    'Template for creating a DNS Zone and SSL Certificate. '
-    'Note: Stack creation will block until domain ownership is verified.')
+t.add_description('Template for creating the IYPM DNS Zone on Route53.')
 
 
 zone_name = t.add_parameter(Parameter(
@@ -28,13 +25,6 @@ zone_name = t.add_parameter(Parameter(
 hosted_zone = t.add_resource(HostedZone('DNSZone', Name=Ref(zone_name)))
 
 
-acm_certificate = t.add_resource(Certificate(
-    'Certificate',
-    DomainName=Ref(zone_name),
-    SubjectAlternativeNames=[Sub('*.${ZoneName}')]
-))
-
-
 t.add_output([
     Output(
         'ZoneId',
@@ -42,12 +32,6 @@ t.add_output([
         Value=Ref(hosted_zone),
         Export=Export(Sub('${AWS::StackName}-R53Zone'))
     ),
-    Output(
-        'CertificateId',
-        Description='ACM Certificate ARN',
-        Value=Ref(acm_certificate),
-        Export=Export(Sub('${AWS::StackName}-CertARN'))
-    )
 ])
 
 

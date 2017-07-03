@@ -1,17 +1,6 @@
 {
-    "Description": "Template for creating a DNS Zone and SSL Certificate. Note: Stack creation will block until domain ownership is verified.",
+    "Description": "Template for creating the IYPM DNS Zone on Route53.",
     "Outputs": {
-        "CertificateId": {
-            "Description": "ACM Certificate ARN",
-            "Export": {
-                "Name": {
-                    "Fn::Sub": "${AWS::StackName}-CertARN"
-                }
-            },
-            "Value": {
-                "Ref": "Certificate"
-            }
-        },
         "ZoneId": {
             "Description": "Route53 Zone ID",
             "Export": {
@@ -31,19 +20,6 @@
         }
     },
     "Resources": {
-        "Certificate": {
-            "Properties": {
-                "DomainName": {
-                    "Ref": "ZoneName"
-                },
-                "SubjectAlternativeNames": [
-                    {
-                        "Fn::Sub": "*.${ZoneName}"
-                    }
-                ]
-            },
-            "Type": "AWS::CertificateManager::Certificate"
-        },
         "DNSZone": {
             "Properties": {
                 "Name": {
