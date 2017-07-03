@@ -1,0 +1,37 @@
+{
+    "Description": "Template for creating SSL/TLS certificates using ACM. Note: Stack creation will block until domain ownership is verified.",
+    "Outputs": {
+        "CertificateId": {
+            "Description": "ACM Certificate ARN",
+            "Export": {
+                "Name": {
+                    "Fn::Sub": "${AWS::StackName}-CertARN"
+                }
+            },
+            "Value": {
+                "Ref": "Certificate"
+            }
+        }
+    },
+    "Parameters": {
+        "DomainName": {
+            "Description": "The name of the domain to create certificates for (example.com).",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "Certificate": {
+            "Properties": {
+                "DomainName": {
+                    "Ref": "DomainName"
+                },
+                "SubjectAlternativeNames": [
+                    {
+                        "Fn::Sub": "*.${DomainName}"
+                    }
+                ]
+            },
+            "Type": "AWS::CertificateManager::Certificate"
+        }
+    }
+}
