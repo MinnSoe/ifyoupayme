@@ -1,0 +1,56 @@
+{
+    "Description": "Template for creating a DNS Zone and SSL Certificate. Note: Stack creation will block until domain ownership is verified.",
+    "Outputs": {
+        "CertificateId": {
+            "Description": "ACM Certificate ARN",
+            "Export": {
+                "Name": {
+                    "Fn::Sub": "${AWS::StackName}-CertARN"
+                }
+            },
+            "Value": {
+                "Ref": "Certificate"
+            }
+        },
+        "ZoneId": {
+            "Description": "Route53 Zone ID",
+            "Export": {
+                "Name": {
+                    "Fn::Sub": "${AWS::StackName}-R53Zone"
+                }
+            },
+            "Value": {
+                "Ref": "DNSZone"
+            }
+        }
+    },
+    "Parameters": {
+        "ZoneName": {
+            "Description": "The name of the DNS Zone to create (example.com).",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "Certificate": {
+            "Properties": {
+                "DomainName": {
+                    "Ref": "ZoneName"
+                },
+                "SubjectAlternativeNames": [
+                    {
+                        "Fn::Sub": "*.${ZoneName}"
+                    }
+                ]
+            },
+            "Type": "AWS::CertificateManager::Certificate"
+        },
+        "DNSZone": {
+            "Properties": {
+                "Name": {
+                    "Ref": "ZoneName"
+                }
+            },
+            "Type": "AWS::Route53::HostedZone"
+        }
+    }
+}
