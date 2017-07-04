@@ -1,0 +1,9 @@
+version: 2
+jobs:
+    build:
+        working_directory: ~/iypm
+        docker:
+            - image: circleci/node:8-browsers
+        steps:
+            - checkout
+            - run: echo "IYPM CircleCI Test Success"
