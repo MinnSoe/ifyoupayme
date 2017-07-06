@@ -1,0 +1,9 @@
+{
+  "name": "ifyoupayme",
+  "version": "0.0.1",
+  "description": "SPA for ifyoupayme",
+  "main": "index.js",
+  "repository": "git@github.com:MinnSoe/ifyoupayme.git",
+  "author": "Minn Soe <contributions@minn.io>",
+  "license": "MPL 2.0"
+}
