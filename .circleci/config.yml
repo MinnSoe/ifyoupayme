@@ -20,4 +20,4 @@ jobs:
           command: |
             aws s3 sync build s3://${S3_BUCKET_PROD} --delete
             aws configure set preview.cloudfront true
-            aws cloudfront create-invalidation --distribution-id ${CF_DIST_ID} --paths "*"
+            aws cloudfront create-invalidation --distribution-id ${CF_DIST_ID} --paths "/*"
