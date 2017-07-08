@@ -18,12 +18,12 @@ jobs:
       - deploy:
           name: Deploy release or release candidate
           command: |
-            if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+-rc\.[0-9]\+$";
+            if git describe | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+-rc\.[0-9]\+$";
             then
               echo "Deploying release candidate..."
               $(yarn bin)/now -t ${ZEIT_TOKEN} switch ${ZEIT_TEAM}
               $(yarn bin)/now -t ${ZEIT_TOKEN}
-            elif git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
+            elif git describe | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
             then
               echo "Deploying release onto production..."
               aws s3 sync build s3://${S3_BUCKET_PROD} --delete --acl public-read
