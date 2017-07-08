@@ -8,6 +8,7 @@ jobs:
       - checkout
       - restore_cache:
           key: deps-{{ checksum "package.json" }}
+      - run: yarn global add now
       - run: yarn install
       - save_cache:
           key: deps-{{ checksum "package.json" }}
@@ -16,8 +17,19 @@ jobs:
       - run: yarn build
       - run: yarn test
       - deploy:
-          name: Sync S3 bucket and invalidate Cloudfront cache
+          name: Deploy release or release candidate
           command: |
-            aws s3 sync build s3://${S3_BUCKET_PROD} --delete --acl public-read
-            aws configure set preview.cloudfront true
-            aws cloudfront create-invalidation --distribution-id ${CF_DIST_ID} --paths "/*"
+            if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+-rc\.[0-9]\+$";
+            then
+              echo "Deploying release candidate..."
+              $(yarn global bin)/now -t ${ZEIT_TOKEN} switch ${ZEIT_TEAM}
+              $(yarn global bin)/now -t ${ZEIT_TOKEN}
+            elif git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
+            then
+              echo "Deploying release onto production..."
+              aws s3 sync build s3://${S3_BUCKET_PROD} --delete --acl public-read
+              aws configure set preview.cloudfront true
+              aws cloudfront create-invalidation --distribution-id ${CF_DIST_ID} --paths "/*"
+            else
+              echo "Skipping deploy..."
+            fi
