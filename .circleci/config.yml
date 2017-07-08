@@ -22,7 +22,7 @@ jobs:
             then
               echo "Deploying release candidate..."
               $(yarn bin)/now -t ${ZEIT_TOKEN} switch ${ZEIT_TEAM}
-              $(yarn bin)/now -t ${ZEIT_TOKEN}
+              $(yarn bin)/now -p -t ${ZEIT_TOKEN}
             elif git describe | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
             then
               echo "Deploying release onto production..."
