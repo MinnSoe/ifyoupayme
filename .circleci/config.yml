@@ -1,9 +1,23 @@
 version: 2
 jobs:
-    build:
-        working_directory: ~/iypm
-        docker:
-            - image: circleci/node:8-browsers
-        steps:
-            - checkout
-            - run: echo "IYPM CircleCI Test Success"
+  build:
+    working_directory: ~/iypm
+    docker:
+      - image: minn/node-awscli:latest
+    steps:
+      - checkout
+      - restore_cache:
+          key: deps-{{ checksum "package.json" }}
+      - run: yarn install
+      - save_cache:
+          key: deps-{{ checksum "package.json" }}
+          paths:
+            - ~/.cache
+      - run: yarn build
+      - run: yarn test
+      - deploy:
+          name: Sync S3 bucket and invalidate Cloudfront cache
+          command: |
+            aws s3 sync build s3://${S3_BUCKET_PROD} --delete
+            aws configure set preview.cloudfront true
+            aws cloudfront create-invalidation --distribution-id ${CF_DIST_ID} --paths "*"
