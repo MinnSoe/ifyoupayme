@@ -23,7 +23,7 @@ jobs:
               echo "Deploying release candidate..."
               $(yarn bin)/now -t ${ZEIT_TOKEN} switch ${ZEIT_TEAM}
               $(yarn bin)/now -p -t ${ZEIT_TOKEN} \
-                | tee $(tty) \
+                | tee /dev/tty \
                 | grep -o "[a-zA-Z0-9_-]\+\.now\.sh" \
                 | (read NOW_ID; now alias ${NOW_ID} "iypm-$(git rev-parse --short HEAD)")
             elif git describe | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
