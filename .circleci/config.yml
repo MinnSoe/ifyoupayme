@@ -22,10 +22,9 @@ jobs:
             then
               echo "Deploying release candidate..."
               $(yarn bin)/now -t ${ZEIT_TOKEN} switch ${ZEIT_TEAM}
-              $(yarn bin)/now -p -t ${ZEIT_TOKEN} \
-                | tee /dev/tty \
-                | grep -o "[a-zA-Z0-9_-]\+\.now\.sh" \
-                | (read NOW_ID; $(yarn bin)/now alias ${NOW_ID} "iypm-$(git rev-parse --short HEAD)")
+              $(yarn bin)/now -p -t ${ZEIT_TOKEN}
+              $(yarn bin)/now alias -t ${ZEIT_TOKEN}
+              $(yarn bin)/now alias -t ${ZEIT_TOKEN} "iypm-$(git rev-parse --short HEAD)"
             elif git describe | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
             then
               echo "Deploying release onto production..."
