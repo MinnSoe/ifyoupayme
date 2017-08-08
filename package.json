@@ -19,5 +19,8 @@
   },
   "now": {
     "alias": "iypm-latest"
+  },
+  "devDependencies": {
+    "prettier": "^1.5.3"
   }
 }
